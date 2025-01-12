@@ -1,64 +1,109 @@
 import readline from 'readline';
 
 export class GameView {
-  private rl: readline.Interface;
+  private isFirstRender = true;
+  private choiceIndex = 0;
+  private currentChoices: string[] = [];
+  private currentResolve: ((value: string) => void) | null = null;
+  private colors = [
+    '\x1b[31m', // Красный
+    '\x1b[32m', // Зелёный
+    '\x1b[33m', // Жёлтый
+    '\x1b[34m', // Синий
+    '\x1b[35m', // Пурпурный
+    '\x1b[36m', // Голубой
+  ];
 
   constructor() {
-    this.rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout,
-    });
-  }
-  public showWelcomeMessage(msg: string): void {
-    console.log(msg);
+    this.initReadline();
   }
 
-  // public getUserInput(question: string, cb: (input: string) => void): void {
-  //   this.rl.question(question, cb);
-  // }
-  public getUserInput(
-    question: string,
-    choices: string[],
-    callback: (selected: string) => void,
-  ): void {
-    let index = 0;
-
-    const renderChoices = () => {
-      console.clear();
-      console.log(question);
-      choices.forEach((choice, i) => {
-        if (i === index) {
-          console.log(`> ${choice}`);
-        } else {
-          console.log(`  ${choice}`);
-        }
-      });
-    };
-
-    const onKeyPress = (key: readline.Key) => {
-      if (key.name === 'up') {
-        index = (index - 1 + choices.length) % choices.length;
-        renderChoices();
-      } else if (key.name === 'down') {
-        index = (index + 1) % choices.length;
-        renderChoices();
-      } else if (key.name === 'return') {
-        process.stdin.off('keypress', onKeyPress);
-        this.rl.write('\n');
-        callback(choices[index]);
-      }
-    };
-
-    renderChoices();
-    process.stdin.on('keypress', onKeyPress);
-  }
-
-  public displayResult(result: string): void {
+  public displayMessage(result: string): void {
     console.log(result);
   }
 
-  public showGameOverMessage(): void {
-    console.log('Конец игры.');
-    this.rl.close();
+  private initReadline() {
+    readline.emitKeypressEvents(process.stdin);
+    if (process.stdin.isTTY) {
+      process.stdin.setRawMode(true);
+      process.stdin.resume();
+    }
+    process.stdin.on('keypress', this.handleKeyPress);
+  }
+
+  private colorize = (text: string, colorCode: string): string => {
+    return `${colorCode}${text}\x1b[0m`;
+  };
+
+  private renderChoices = (question: string = ''): void => {
+    if (!this.isFirstRender) {
+      for (let i = 0; i < this.currentChoices.length; i++) {
+        process.stdout.write('\x1b[1A');
+        process.stdout.write('\x1b[2K');
+      }
+    } else {
+      if (question) console.log(this.colorize(question, this.colors[this.colors.length - 1]));
+      this.isFirstRender = false;
+    }
+
+    this.currentChoices.forEach((choice, i) => {
+      const color = this.colors[i % this.colors.length];
+      const coloredChoice = this.colorize(choice, color);
+      if (i === this.choiceIndex) {
+        console.log(`> ${coloredChoice}`);
+      } else {
+        console.log(`  ${coloredChoice}`);
+      }
+    });
+  };
+
+  private handleKeyPress = (str: string, key: readline.Key): void => {
+    if (!this.currentResolve || !this.currentChoices.length) {
+      return;
+    }
+
+    if (key.name === 'up') {
+      this.choiceIndex = (this.choiceIndex - 1 + this.currentChoices.length) % this.currentChoices.length;
+      this.renderChoices();
+    } else if (key.name === 'down') {
+      this.choiceIndex = (this.choiceIndex + 1) % this.currentChoices.length;
+      this.renderChoices();
+    } else if (key.name === 'return') {
+      const selectedChoice = this.currentChoices[this.choiceIndex];
+      this.currentResolve(selectedChoice);
+      this.resetState();
+    } else if (key.name === 'c' && key.ctrl) {
+      this.closeProcess();
+    }
+  };
+
+  public checkUserInput(question: string, choices: string[]): Promise<string> {
+    return new Promise(resolve => {
+      if (!choices.length) {
+        return resolve('');
+      }
+
+      this.currentChoices = choices;
+      this.currentResolve = resolve;
+
+      this.choiceIndex = 0;
+      this.isFirstRender = true;
+
+      this.renderChoices(question);
+    });
+  }
+
+  private resetState(): void {
+    this.currentChoices = [];
+    this.currentResolve = null;
+    this.choiceIndex = 0;
+    this.isFirstRender = true;
+  }
+
+  public closeProcess() {
+    process.stdin.setRawMode(false);
+    process.stdin.pause();
+    process.stdin.off('keypress', this.handleKeyPress);
+    process.exit(0);
   }
 }

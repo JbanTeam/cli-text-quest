@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon src/app.ts"
+    "dev": "nodemon -I src/app.ts",
+    "start": "ts-node src/app.ts"
   },
   "author": "Vital Alex",
   "license": "ISC",

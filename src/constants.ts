@@ -1,82 +1,28 @@
-type DirectionType = {
-  description: string;
-  choices: string[];
-  actions: ActionType[];
-};
-type ActionType = {
-  description: string;
-  match: string;
-  isGameOver?: boolean;
+import {
+  welcomeScenario,
+  beginScenario,
+  rightDirectionScenario,
+  leftDirectionScenario,
+  knockDoorScenario,
+  talkWithWomanScenario,
+} from './scenarios';
+import { MappedScenariosType, ScenariosType } from './types';
+
+export const scenarios: ScenariosType = {
+  welcome: welcomeScenario,
+  begin: beginScenario,
+  right: rightDirectionScenario,
+  left: leftDirectionScenario,
+  knockTheDoor: knockDoorScenario,
+  talkWithWoman: talkWithWomanScenario,
 };
 
-type States = {
-  [key: string]: string;
-};
-
-export const mappedStates: States = {
+export const mappedScenarios: MappedScenariosType = {
+  'начать': 'begin',
   'направо': 'right',
   'налево': 'left',
-  'перейти через мост': 'throughBridge',
-  'вернуться назад': 'back',
-  'войти в хижину': 'enterHouse',
   'постучать в дверь': 'knockTheDoor',
-};
-
-const beginState = {
-  desctiption: `
-Вы просыпаетесь в центре густого леса, окруженного туманом.
-Единственный звук, который вы слышите, — это ветер, шелестящий в листве деревьев.
-Перед вами две тропинки. Одна ведет направо, другая — налево.`,
-  choices: ['Направо', 'Налево'],
-};
-
-const rightDirection: DirectionType = {
-  description: `
-Вы поворачиваете направо и идёте по узкой тропинке.
-Через некоторое время перед вами появляется старый мост, ведущий через бурную реку.`,
-  choices: ['Перейти через мост', 'Вернуться назад'],
-  actions: [
-    {
-      description: `
-Вы смело идёте по скрипящим доскам моста, но в середине пути слышите треск.
-Мост обрушивается под вами, и вы падаете в холодную воду реки. Вы теряете сознание...`,
-      match: 'Перейти через мост',
-      isGameOver: true,
-    },
-    {
-      description: `
-Вы решаете не рисковать и возвращаетесь к развилке.`,
-      match: 'Вернуться назад',
-    },
-  ],
-};
-
-const leftDirection: DirectionType = {
-  description: `
-Вы сворачиваете налево, и тропинка выводит вас к небольшой хижине.
-Из окна виден тусклый свет, а дверь приоткрыта.`,
-  choices: ['Войти в хижину', 'Постучать в дверь'],
-  actions: [
-    {
-      description: `
-Вы решаете войти в хижину, но как только переступаете порог, дверь захлопывается за вашей спиной.
-Внутри пусто, только звук капающей воды раздается в тишине. Кажется, что вы попали в ловушку.`,
-      match: 'Войти в хижину',
-      isGameOver: true,
-    },
-    {
-      description: `
-Вы стучите в дверь, и через мгновение её открывает пожилая женщина с добрым взглядом.
-Она предлагает вам войти и отдохнуть.
-Вы чувствуете себя в безопасности и продолжаете путь с новыми силами.`,
-      match: 'Постучать в дверь',
-      isGameOver: true,
-    },
-  ],
-};
-
-export const states = {
-  begin: beginState,
-  right: rightDirection,
-  left: leftDirection,
+  'поговорить с женщиной': 'talkWithWoman',
+  'вернуться назад': 'back',
+  'назад': 'backFromAction',
 };

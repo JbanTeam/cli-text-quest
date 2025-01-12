@@ -1,6 +1,6 @@
 import { GameModel } from '../model/GameModel';
 import { GameView } from '../view/GameView';
-import { states } from '../constants';
+import { MappedScenariosType, ScenariosType } from '../types';
 
 export class GameController {
   private model: GameModel;
@@ -11,24 +11,39 @@ export class GameController {
     this.view = new GameView();
   }
 
-  public start(): void {
-    const startMessage = states.begin.desctiption;
-    this.view.showWelcomeMessage(startMessage);
-    const onInput = (input: string) => {
-      this.handleInput(input.trim());
-      if (this.model.isGameOver) {
-        this.view.showGameOverMessage();
-        process.exit(0);
-      } else {
-        this.view.getUserInput('', [''], onInput);
-      }
-    };
+  public async start(scenarios: ScenariosType, mappedScenarios: MappedScenariosType): Promise<void> {
+    const { description, question, choices } = this.model.processScenario(scenarios, mappedScenarios);
+    this.view.displayMessage(description);
 
-    this.view.getUserInput('', [''], onInput);
+    await this.play(scenarios, mappedScenarios, question, choices);
   }
 
-  private handleInput(input: string): void {
-    const result = this.model.processInput(input);
-    this.view.displayResult(result);
+  private async play(
+    scenarios: ScenariosType,
+    mappedScenarios: MappedScenariosType,
+    question: string,
+    choices: string[],
+  ): Promise<void> {
+    const input = await this.view.checkUserInput(question, choices);
+
+    if (this.model.getState().isGameOver) {
+      this.view.displayMessage('Конец игры.');
+      const retryInput = await this.view.checkUserInput('\nПопробовать еще раз?', ['Начать заново', 'Выход']);
+
+      if (retryInput.toLowerCase() === 'начать заново') {
+        this.model.resetState();
+        return this.start(scenarios, mappedScenarios);
+      } else {
+        this.view.closeProcess();
+        return;
+      }
+    } else if (input.toLowerCase() === 'выход') {
+      this.view.closeProcess();
+      return;
+    } else {
+      const { description, question, choices } = this.model.processScenario(scenarios, mappedScenarios, input.trim());
+      this.view.displayMessage(description);
+      return this.play(scenarios, mappedScenarios, question, choices);
+    }
   }
 }
