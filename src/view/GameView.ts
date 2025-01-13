@@ -101,7 +101,9 @@ export class GameView {
   }
 
   public closeProcess() {
-    process.stdin.setRawMode(false);
+    if (process.stdin.isTTY && process.stdin.setRawMode) {
+      process.stdin.setRawMode(false);
+    }
     process.stdin.pause();
     process.stdin.off('keypress', this.handleKeyPress);
     process.exit(0);

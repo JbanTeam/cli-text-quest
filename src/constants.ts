@@ -26,3 +26,14 @@ export const mappedScenarios: MappedScenariosType = {
   'вернуться назад': 'back',
   'назад': 'backFromAction',
 };
+
+export const mappedEndGameChoices: Record<string, string> = {
+  'начать заново': 'tryAgain',
+  'выход': 'exit',
+};
+
+export const gameOverMsg = 'Конец игры.';
+export const tryAgainScreen = {
+  question: '\nПопробовать еще раз?',
+  choices: ['Начать заново', 'Выход'],
+};
