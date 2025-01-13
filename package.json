@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "nodemon -I src/app.ts",
     "start": "ts-node src/app.ts",
+    "build": "tsc",
     "test": "jest"
   },
   "author": "Vital Alex",
