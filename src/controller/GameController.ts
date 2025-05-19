@@ -1,6 +1,6 @@
 import { GameModel } from '../model/GameModel';
 import { GameView } from '../view/GameView';
-import { gameOverMsg, mappedEndGameChoices, tryAgainScreen } from '../constants';
+import { gameOverMsg, mappedEndGameChoices, tryAgainScreen, END_GAME_TRY_AGAIN, END_GAME_EXIT } from '../constants';
 import { MappedScenariosType, ScenariosType } from '../types';
 
 export class GameController {
@@ -25,22 +25,21 @@ export class GameController {
     question: string,
     choices: string[],
   ): Promise<void> {
-    const input = await this.view.checkUserInput(question, choices);
-    const inputLower = input.toLowerCase();
+    const input = (await this.view.checkUserInput(question, choices)).toLowerCase();
 
     if (this.model.getState().isGameOver) {
       this.view.displayMessage(gameOverMsg);
-      const retryInput = await this.view.checkUserInput(tryAgainScreen.question, tryAgainScreen.choices);
-      const retryInputLower = retryInput.toLowerCase();
+      const { question, choices } = tryAgainScreen;
+      const retryInput = (await this.view.checkUserInput(question, choices)).toLowerCase();
 
-      if (mappedEndGameChoices[retryInputLower] === 'tryAgain') {
+      if (mappedEndGameChoices[retryInput] === END_GAME_TRY_AGAIN) {
         this.model.resetState();
         return this.start(scenarios, mappedScenarios);
       } else {
         this.view.closeProcess();
         return;
       }
-    } else if (mappedEndGameChoices[inputLower] === 'exit') {
+    } else if (mappedEndGameChoices[input] === END_GAME_EXIT) {
       this.view.closeProcess();
       return;
     } else {
