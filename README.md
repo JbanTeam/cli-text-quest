@@ -33,7 +33,7 @@ git clone https://github.com/JbanTeam/cli-text-quest.git
 2. Перейдите в папку проекта:
 
 ```bash
-cd mysterious-forest
+cd cli-text-quest
 ```
 
 3. Установите зависимости:
