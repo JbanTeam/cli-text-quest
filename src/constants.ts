@@ -7,34 +7,38 @@ import {
   talkWithWomanScenario,
 } from './scenarios';
 import { MappedScenariosType, ScenariosType } from './types';
+import { ScenarioKey, SpecialCommand, EndGameCommand } from './enums';
 
-export const COMMAND_BACK = 'back' as const;
-export const COMMAND_BACK_FROM_ACTION = 'backFromAction' as const;
-export const END_GAME_TRY_AGAIN = 'tryAgain' as const;
-export const END_GAME_EXIT = 'exit' as const;
+export const COMMAND_BACK = SpecialCommand.BACK;
+export const COMMAND_BACK_FROM_ACTION = SpecialCommand.BACK_FROM_ACTION;
+export const END_GAME_TRY_AGAIN = EndGameCommand.TRY_AGAIN;
+export const END_GAME_EXIT = EndGameCommand.EXIT;
 
 export const scenarios: ScenariosType = {
-  welcome: welcomeScenario,
-  begin: beginScenario,
-  right: rightDirectionScenario,
-  left: leftDirectionScenario,
-  knockTheDoor: knockDoorScenario,
-  talkWithWoman: talkWithWomanScenario,
+  [ScenarioKey.WELCOME]: welcomeScenario,
+  [ScenarioKey.BEGIN]: beginScenario,
+  [ScenarioKey.RIGHT]: rightDirectionScenario,
+  [ScenarioKey.LEFT]: leftDirectionScenario,
+  [ScenarioKey.KNOCK_THE_DOOR]: knockDoorScenario,
+  [ScenarioKey.TALK_WITH_WOMAN]: talkWithWomanScenario,
 };
 
 export const mappedScenarios: MappedScenariosType = {
-  'начать': 'begin',
-  'направо': 'right',
-  'налево': 'left',
-  'постучать в дверь': 'knockTheDoor',
-  'поговорить с женщиной': 'talkWithWoman',
-  'вернуться назад': COMMAND_BACK,
-  'назад': COMMAND_BACK_FROM_ACTION,
+  'начать': ScenarioKey.BEGIN,
+  'направо': ScenarioKey.RIGHT,
+  'налево': ScenarioKey.LEFT,
+  'постучать в дверь': ScenarioKey.KNOCK_THE_DOOR,
+  'поговорить с женщиной': ScenarioKey.TALK_WITH_WOMAN,
 };
 
-export const mappedEndGameChoices: Record<string, string> = {
-  'начать заново': END_GAME_TRY_AGAIN,
-  'выход': END_GAME_EXIT,
+export const mappedBackChoices: Record<string, SpecialCommand> = {
+  'вернуться назад': SpecialCommand.BACK,
+  'назад': SpecialCommand.BACK_FROM_ACTION,
+};
+
+export const mappedEndGameChoices: Record<string, EndGameCommand> = {
+  'начать заново': EndGameCommand.TRY_AGAIN,
+  'выход': EndGameCommand.EXIT,
 };
 
 export const gameOverMsg = 'Конец игры.';

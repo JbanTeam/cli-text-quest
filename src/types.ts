@@ -11,9 +11,11 @@ type ActionType = {
   choices?: string[];
 };
 
-type ScenariosType = Record<string, ScenarioType>;
+import { ScenarioKey, SpecialCommand } from './enums';
 
-type MappedScenariosType = Record<string, string>;
+type ScenariosType = Record<ScenarioKey, ScenarioType>;
+
+type MappedScenariosType = Record<string, ScenarioKey>;
 
 type StateType = {
   steps: string[];
