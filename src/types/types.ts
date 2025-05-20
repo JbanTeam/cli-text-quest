@@ -15,6 +15,7 @@ type ActionType = {
 };
 
 type ScenariosType = Record<ScenarioKey, ScenarioType>;
+type ScenarioReturnType = { choices: string[]; description: string; question: string };
 
 type MappedScenariosType = Record<string, ScenarioKey>;
 
@@ -24,4 +25,4 @@ type StateType = {
   isGameOver: boolean;
 };
 
-export { ScenarioType, ActionType, ScenariosType, MappedScenariosType, StateType };
+export { ScenarioType, ScenarioReturnType, ActionType, ScenariosType, MappedScenariosType, StateType };

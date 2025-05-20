@@ -1,6 +1,6 @@
 import { lastElemOfArr } from '../utils/utils';
 import { SpecialCommand, ScenarioKey } from '../types/enums';
-import { ActionType, StateType, ScenarioType } from '../types/types';
+import { ActionType, StateType, ScenarioType, ScenarioReturnType } from '../types/types';
 import { mappedBackChoices, mappedScenarios, scenarios } from '../utils/constants';
 
 export class GameModel {
@@ -26,14 +26,14 @@ export class GameModel {
     };
   }
 
-  public processScenario(input?: string): { choices: string[]; description: string; question: string } {
+  public processScenario(input?: string): ScenarioReturnType {
     const currentStep: ScenarioKey = this.getCurrentStep();
 
     if (!input) {
       return this.getInitialScenarioResult(currentStep);
     }
 
-    const { nextScenario } = this.processNextStep(currentStep, input);
+    const nextScenario = this.processNextStep(currentStep, input);
 
     if (this.state.actions.length === 0) {
       const { choices, description, question } = nextScenario;
@@ -51,7 +51,7 @@ export class GameModel {
     };
   }
 
-  private processAction(nextScenario: ScenarioType): { choices: string[]; description: string; question: string } {
+  private processAction(nextScenario: ScenarioType): ScenarioReturnType {
     const lastActionInState: string = lastElemOfArr(this.state.actions);
     const matchedAction: ActionType | undefined = nextScenario.actions?.find((actionItem: ActionType) =>
       actionItem.match.toLowerCase().includes(lastActionInState),
@@ -69,21 +69,12 @@ export class GameModel {
     return lastElemOfArr(this.state.steps) as ScenarioKey;
   }
 
-  private getInitialScenarioResult(currentStep: ScenarioKey): {
-    choices: string[];
-    description: string;
-    question: string;
-  } {
+  private getInitialScenarioResult(currentStep: ScenarioKey): ScenarioReturnType {
     const { choices, description, question } = scenarios[currentStep];
     return this.resultScenario(choices, description, question);
   }
 
-  private processNextStep(
-    currentStep: ScenarioKey,
-    input: string,
-  ): {
-    nextScenario: ScenarioType;
-  } {
+  private processNextStep(currentStep: ScenarioKey, input: string): ScenarioType {
     const newStep: ScenarioKey | undefined = mappedScenarios[input];
 
     const curScenario: ScenarioType = scenarios[currentStep];
@@ -122,8 +113,6 @@ export class GameModel {
       this.state.steps.push(newStep);
     }
 
-    return {
-      nextScenario,
-    };
+    return nextScenario;
   }
 }
