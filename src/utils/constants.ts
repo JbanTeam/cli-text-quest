@@ -1,3 +1,5 @@
+import { MappedScenariosType, ScenariosType } from '../types/types';
+import { ScenarioKey, SpecialCommand, EndGameCommand } from '../types/enums';
 import {
   welcomeScenario,
   beginScenario,
@@ -6,8 +8,6 @@ import {
   knockDoorScenario,
   talkWithWomanScenario,
 } from './scenarios';
-import { MappedScenariosType, ScenariosType } from './types';
-import { ScenarioKey, SpecialCommand, EndGameCommand } from './enums';
 
 export const COMMAND_BACK = SpecialCommand.BACK;
 export const COMMAND_BACK_FROM_ACTION = SpecialCommand.BACK_FROM_ACTION;

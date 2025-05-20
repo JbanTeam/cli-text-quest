@@ -1,7 +1,7 @@
-import { lastElemOfArr } from '../utils';
-import { SpecialCommand, ScenarioKey } from '../enums';
-import { ActionType, StateType, ScenarioType } from '../types';
-import { mappedBackChoices, mappedScenarios, scenarios } from '../constants';
+import { lastElemOfArr } from '../utils/utils';
+import { SpecialCommand, ScenarioKey } from '../types/enums';
+import { ActionType, StateType, ScenarioType } from '../types/types';
+import { mappedBackChoices, mappedScenarios, scenarios } from '../utils/constants';
 
 export class GameModel {
   private state: StateType;

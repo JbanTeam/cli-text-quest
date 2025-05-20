@@ -1,7 +1,7 @@
-import { EndGameCommand } from '../enums';
-import { GameModel } from '../model/GameModel';
 import { GameView } from '../view/GameView';
-import { gameOverMsg, mappedEndGameChoices, tryAgainScreen } from '../constants';
+import { GameModel } from '../model/GameModel';
+import { EndGameCommand } from '../types/enums';
+import { gameOverMsg, mappedEndGameChoices, tryAgainScreen } from '../utils/constants';
 
 export class GameController {
   private model: GameModel;

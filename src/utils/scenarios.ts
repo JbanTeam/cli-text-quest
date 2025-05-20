@@ -1,4 +1,4 @@
-import { ScenarioType } from './types';
+import { ScenarioType } from '../types/types';
 
 const welcomeScenario: ScenarioType = {
   description: `
