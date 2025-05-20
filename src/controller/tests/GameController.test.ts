@@ -28,18 +28,6 @@ describe('GameController', () => {
 
   describe('start', () => {
     it('should start the game and display the initial state', async () => {
-      const scenarios = {
-        welcome: {
-          choices: ['begin'],
-          description: 'Welcome!',
-          question: 'How are you?',
-        },
-      };
-
-      const mappedScenarios = {
-        'начать': 'begin',
-      };
-
       mockModel.getState.mockReturnValue({
         steps: ['welcome'],
         actions: [],
@@ -54,7 +42,7 @@ describe('GameController', () => {
 
       mockView.checkUserInput.mockResolvedValue('выход');
 
-      await gameController.start(scenarios, mappedScenarios);
+      await gameController.start();
 
       expect(mockView.displayMessage).toHaveBeenCalledWith('Welcome!');
 
@@ -64,23 +52,6 @@ describe('GameController', () => {
 
   describe('play', () => {
     it('should handle user input and continue the game', async () => {
-      const scenarios = {
-        welcome: {
-          choices: ['Начать'],
-          description: 'Привет!',
-          question: 'Как дела?',
-        },
-        begin: {
-          choices: ['Дальше'],
-          description: 'Круто!',
-          question: 'Как дела?',
-        },
-      };
-
-      const mappedScenarios = {
-        'начать': 'begin',
-      };
-
       mockModel.getState.mockReturnValue({
         steps: ['welcome'],
         actions: [],
@@ -109,7 +80,7 @@ describe('GameController', () => {
         .mockResolvedValueOnce('дальше')
         .mockResolvedValueOnce('выход');
 
-      await gameController.start(scenarios, mappedScenarios);
+      await gameController.start();
 
       expect(mockView.displayMessage).toHaveBeenCalledWith('Привет!');
       expect(mockView.displayMessage).toHaveBeenCalledWith('Круто!');
@@ -154,7 +125,8 @@ describe('GameController', () => {
         .mockResolvedValueOnce('начать заново')
         .mockResolvedValueOnce('выход');
 
-      await gameController.start(scenarios, mappedScenarios);
+      // The scenarios and mappedScenarios are used to configure mocks, not passed to start()
+      await gameController.start();
 
       expect(mockView.displayMessage).toHaveBeenCalledWith('Конец игры.');
       expect(mockView.checkUserInput).toHaveBeenCalledWith('\nПопробовать еще раз?', ['Начать заново', 'Выход']);
@@ -188,7 +160,8 @@ describe('GameController', () => {
 
       mockView.checkUserInput.mockResolvedValue('выход');
 
-      await gameController.start(scenarios, mappedScenarios);
+      // The scenarios and mappedScenarios are used to configure mocks, not passed to start()
+      await gameController.start();
 
       expect(mockView.closeProcess).toHaveBeenCalled();
     });

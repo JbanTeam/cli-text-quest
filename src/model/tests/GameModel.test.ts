@@ -1,4 +1,5 @@
 import { GameModel } from '../GameModel';
+import { ScenarioType } from '../../types/types';
 
 describe('GameModel', () => {
   let gameModel: GameModel;
@@ -20,9 +21,11 @@ describe('GameModel', () => {
 
   describe('resetState', () => {
     it('should reset the state to initial', () => {
-      gameModel.getState().steps.push('step1');
-      gameModel.getState().actions.push('action1');
-      gameModel.getState().isGameOver = true;
+      gameModel['state'] = {
+        steps: ['begin'],
+        actions: ['action1'],
+        isGameOver: true,
+      };
 
       gameModel.resetState();
 
@@ -37,85 +40,36 @@ describe('GameModel', () => {
 
   describe('processScenario', () => {
     it('should return the initial scenario if no input is provided', () => {
-      const scenarios = {
-        welcome: {
-          choices: ['begin'],
-          description: 'Hello!',
-          question: 'Ready?',
-        },
-      };
-
-      const mappedScenarios = {
-        begin: 'begin',
-      };
-
-      const result = gameModel.processScenario(scenarios, mappedScenarios);
-      expect(result).toEqual({
-        choices: ['begin'],
-        description: 'Hello!',
-        question: 'Ready?',
-      });
+      const result = gameModel.processScenario();
+      expect(result.choices).toContain('Начать');
+      expect(result.description).toContain('Добро пожаловать в невероятно захватывающий текстовый квест');
+      expect(result.question).toBe('Выберите \"Начать\" чтобы погрузиться в приключение.');
     });
 
     it('should process a valid input and return the next scenario', () => {
-      const scenarios = {
-        welcome: {
-          choices: ['begin'],
-          description: 'Hello!',
-          question: 'Ready?',
-        },
-        begin: {
-          choices: ['nextStep'],
-          description: 'Next level.',
-          question: 'What do you want?',
-        },
-      };
+      const input = 'Начать';
+      const result = gameModel.processScenario(input.toLowerCase());
 
-      const mappedScenarios = {
-        begin: 'begin',
-        nextStep: 'nextStep',
-        back: 'back',
-      };
-
-      const result = gameModel.processScenario(scenarios, mappedScenarios, 'begin');
-      expect(result).toEqual({
-        choices: ['nextStep'],
-        description: 'Next level.',
-        question: 'What do you want?',
-      });
+      expect(result.choices).toContain('Направо');
+      expect(result.choices).toContain('Налево');
+      expect(result.choices).toContain('Вернуться назад');
+      expect(result.description).toContain('Вы просыпаетесь в центре густого леса, окруженного туманом.');
+      expect(result.question).toBe('Куда направитесь?');
 
       const state = gameModel.getState();
       expect(state.steps).toEqual(['welcome', 'begin']);
     });
 
-    it('should handle the "back" command correctly', () => {
-      const scenarios = {
-        welcome: {
-          choices: ['begin'],
-          description: 'Hello!',
-          question: 'Ready?',
-        },
-        begin: {
-          choices: ['nextStep'],
-          description: 'Next level.',
-          question: 'What do you want?',
-        },
-      };
+    it('should handle "back" command correctly', () => {
+      const input = 'Начать';
+      const inputBack = 'Вернуться назад';
+      gameModel.processScenario(input.toLowerCase());
 
-      const mappedScenarios = {
-        begin: 'begin',
-        nextStep: 'nextStep',
-        back: 'back',
-      };
+      const result = gameModel.processScenario(inputBack.toLowerCase());
 
-      gameModel.processScenario(scenarios, mappedScenarios, 'begin');
-
-      const result = gameModel.processScenario(scenarios, mappedScenarios, 'back');
-      expect(result).toEqual({
-        choices: ['begin'],
-        description: 'Hello!',
-        question: 'Ready?',
-      });
+      expect(result.choices).toContain('Начать');
+      expect(result.description).toContain('Добро пожаловать в невероятно захватывающий текстовый квест');
+      expect(result.question).toBe('Выберите \"Начать\" чтобы погрузиться в приключение.');
 
       const state = gameModel.getState();
       expect(state.steps).toEqual(['welcome']);
@@ -124,34 +78,34 @@ describe('GameModel', () => {
 
   describe('processAction', () => {
     it('should process an action and return the result', () => {
-      const scenario = {
-        choices: ['option1', 'option2'],
-        description: 'Two options.',
-        question: 'Which one?',
+      const input = 'Опция1';
+      const scenarioInput: ScenarioType = {
+        choices: ['Опция1', 'Опция2'],
+        description: 'Что же выбрать, хм.',
+        question: 'Так что?',
         actions: [
           {
-            match: 'option1',
-            description: 'You choose option1',
-            choices: ['begin'],
+            match: 'Опция1',
+            description: 'Вы выбрали опцию1',
+            choices: ['Начать'],
           },
         ],
       };
 
-      const newStep = 'begin';
-      const isActionNextScenario = true;
+      gameModel.getState().actions.push(input.toLowerCase());
 
-      gameModel.getState().actions.push('option1');
-
-      const result = gameModel['processAction'](scenario, newStep, isActionNextScenario);
+      const result = gameModel['processAction'](scenarioInput);
       expect(result).toEqual({
-        choices: ['begin'],
-        description: 'You choose option1',
+        choices: ['Начать'],
+        description: 'Вы выбрали опцию1',
         question: '',
       });
 
       const state = gameModel.getState();
-      expect(state.steps).toEqual(['welcome', 'begin']);
-      expect(state.actions).toEqual([]);
+
+      expect(state.steps).toEqual(['welcome']);
+      expect(state.actions).toEqual([input.toLowerCase()]);
+      expect(state.isGameOver).toBe(false);
     });
   });
 });

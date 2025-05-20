@@ -13,6 +13,10 @@ describe('GameView', () => {
     consoleSpy.mockRestore();
   });
 
+  afterAll(() => {
+    process.stdin.pause();
+  });
+
   describe('displayMessage', () => {
     it('should display a message', () => {
       const message = 'Test message';
