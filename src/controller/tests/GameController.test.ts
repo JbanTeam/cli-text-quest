@@ -28,6 +28,8 @@ describe('GameController', () => {
 
   describe('start', () => {
     it('should start the game and display the initial state', async () => {
+      const spyDisplayMsg = jest.spyOn(mockView, 'displayMessage');
+      const spyCheckUserInput = jest.spyOn(mockView, 'checkUserInput');
       mockModel.getState.mockReturnValue({
         steps: ['welcome'],
         actions: [],
@@ -44,14 +46,17 @@ describe('GameController', () => {
 
       await gameController.start();
 
-      expect(mockView.displayMessage).toHaveBeenCalledWith('Welcome!');
+      expect(spyDisplayMsg).toHaveBeenCalledWith('Welcome!');
 
-      expect(mockView.checkUserInput).toHaveBeenCalledWith('How are you?', ['begin']);
+      expect(spyCheckUserInput).toHaveBeenCalledWith('How are you?', ['begin']);
     });
   });
 
   describe('play', () => {
     it('should handle user input and continue the game', async () => {
+      const spyDisplayMsg = jest.spyOn(mockView, 'displayMessage');
+      const spyCheckUserInput = jest.spyOn(mockView, 'checkUserInput');
+
       mockModel.getState.mockReturnValue({
         steps: ['welcome'],
         actions: [],
@@ -82,25 +87,17 @@ describe('GameController', () => {
 
       await gameController.start();
 
-      expect(mockView.displayMessage).toHaveBeenCalledWith('Привет!');
-      expect(mockView.displayMessage).toHaveBeenCalledWith('Круто!');
+      expect(spyDisplayMsg).toHaveBeenCalledWith('Привет!');
+      expect(spyDisplayMsg).toHaveBeenCalledWith('Круто!');
 
-      expect(mockView.checkUserInput).toHaveBeenCalledWith('Как дела?', ['Начать']);
-      expect(mockView.checkUserInput).toHaveBeenCalledWith('Как дела?', ['Дальше']);
+      expect(spyCheckUserInput).toHaveBeenCalledWith('Как дела?', ['Начать']);
+      expect(spyCheckUserInput).toHaveBeenCalledWith('Как дела?', ['Дальше']);
     });
 
     it('should handle game over and restart the game', async () => {
-      const scenarios = {
-        welcome: {
-          choices: ['Начать'],
-          description: 'Привет!',
-          question: 'Как дела?',
-        },
-      };
-
-      const mappedScenarios = {
-        'начать': 'begin',
-      };
+      const spyDisplayMsg = jest.spyOn(mockView, 'displayMessage');
+      const spyCheckUserInput = jest.spyOn(mockView, 'checkUserInput');
+      const spyResetState = jest.spyOn(mockModel, 'resetState');
 
       mockModel.getState
         .mockReturnValueOnce({
@@ -125,27 +122,15 @@ describe('GameController', () => {
         .mockResolvedValueOnce('начать заново')
         .mockResolvedValueOnce('выход');
 
-      // The scenarios and mappedScenarios are used to configure mocks, not passed to start()
       await gameController.start();
 
-      expect(mockView.displayMessage).toHaveBeenCalledWith('Конец игры.');
-      expect(mockView.checkUserInput).toHaveBeenCalledWith('\nПопробовать еще раз?', ['Начать заново', 'Выход']);
-      expect(mockModel.resetState).toHaveBeenCalled();
+      expect(spyDisplayMsg).toHaveBeenCalledWith('Конец игры.');
+      expect(spyCheckUserInput).toHaveBeenCalledWith('\nПопробовать еще раз?', ['Начать заново', 'Выход']);
+      expect(spyResetState).toHaveBeenCalled();
     });
 
     it('should handle exit command and close the process', async () => {
-      const scenarios = {
-        welcome: {
-          choices: ['Начать'],
-          description: 'Привет!',
-          question: 'Как дела?',
-        },
-      };
-
-      const mappedScenarios = {
-        'начать': 'begin',
-      };
-
+      const spyCloseProcess = jest.spyOn(mockView, 'closeProcess');
       mockModel.getState.mockReturnValue({
         steps: ['welcome'],
         actions: [],
@@ -160,10 +145,9 @@ describe('GameController', () => {
 
       mockView.checkUserInput.mockResolvedValue('выход');
 
-      // The scenarios and mappedScenarios are used to configure mocks, not passed to start()
       await gameController.start();
 
-      expect(mockView.closeProcess).toHaveBeenCalled();
+      expect(spyCloseProcess).toHaveBeenCalled();
     });
   });
 });

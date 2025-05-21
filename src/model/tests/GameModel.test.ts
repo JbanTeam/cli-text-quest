@@ -43,7 +43,7 @@ describe('GameModel', () => {
       const result = gameModel.processScenario();
       expect(result.choices).toContain('Начать');
       expect(result.description).toContain('Добро пожаловать в невероятно захватывающий текстовый квест');
-      expect(result.question).toBe('Выберите \"Начать\" чтобы погрузиться в приключение.');
+      expect(result.question).toBe('Выберите "Начать" чтобы погрузиться в приключение.');
     });
 
     it('should process a valid input and return the next scenario', () => {
@@ -69,7 +69,7 @@ describe('GameModel', () => {
 
       expect(result.choices).toContain('Начать');
       expect(result.description).toContain('Добро пожаловать в невероятно захватывающий текстовый квест');
-      expect(result.question).toBe('Выберите \"Начать\" чтобы погрузиться в приключение.');
+      expect(result.question).toBe('Выберите "Начать" чтобы погрузиться в приключение.');
 
       const state = gameModel.getState();
       expect(state.steps).toEqual(['welcome']);

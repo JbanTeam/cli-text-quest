@@ -1,4 +1,4 @@
-import readline from 'readline';
+import * as readline from 'readline';
 
 export class GameView {
   private isFirstRender = true;
