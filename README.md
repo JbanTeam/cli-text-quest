@@ -83,6 +83,7 @@ export const mappedScenarios: MappedScenariosType = {
   'налево': ScenarioKey.LEFT,
   'постучать в дверь': ScenarioKey.KNOCK_THE_DOOR,
   'поговорить с женщиной': ScenarioKey.TALK_WITH_WOMAN,
+  'вариант 1': Scenario.VARIANT1,
 };
 ```
 
@@ -96,6 +97,7 @@ export enum ScenarioKey {
   LEFT = 'left',
   KNOCK_THE_DOOR = 'knockTheDoor',
   TALK_WITH_WOMAN = 'talkWithWoman',
+  VARIANT1 = 'variant1',
 }
 ```
 
