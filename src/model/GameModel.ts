@@ -83,8 +83,7 @@ export class GameModel {
     const isBackCommand = mappedBackChoices[input] === SpecialCommand.BACK;
     const isBackFromActionCommand = mappedBackChoices[input] === SpecialCommand.BACK_FROM_ACTION;
 
-    const isAction = curActions?.some(action => action.match.toLowerCase().includes(input)) ? true : false;
-    const actionIsNewScenario = typeof newStep === 'string' && isAction;
+    const action = curActions?.find(action => action.match.toLowerCase() === input.toLowerCase());
 
     let nextScenario: ScenarioType;
 
@@ -100,10 +99,10 @@ export class GameModel {
     } else if (isBackFromActionCommand) {
       nextScenario = scenarios[currentStep];
       this.state.actions.pop();
-    } else if (isAction) {
+    } else if (action) {
       this.state.actions.push(input);
       nextScenario = scenarios[currentStep];
-      if (actionIsNewScenario) {
+      if (action.toNextScenario) {
         this.state.steps.push(newStep);
         this.state.actions = [];
         nextScenario = scenarios[newStep];

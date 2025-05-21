@@ -12,6 +12,7 @@ type ActionType = {
   match: string;
   isGameOver?: boolean;
   choices?: string[];
+  toNextScenario?: boolean;
 };
 
 type ScenariosType = Record<ScenarioKey, ScenarioType>;
