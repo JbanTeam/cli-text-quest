@@ -1,7 +1,7 @@
 import { lastElemOfArr } from '../utils/utils';
 import { SpecialCommand, ScenarioKey } from '../types/enums';
+import { mappedBackChoices, mappedScenarios, scenarios } from '../constants/constants';
 import { ActionType, StateType, ScenarioType, ScenarioReturnType } from '../types/types';
-import { mappedBackChoices, mappedScenarios, scenarios } from '../utils/constants';
 
 export class GameModel {
   private state: StateType;
@@ -66,7 +66,7 @@ export class GameModel {
   }
 
   private getCurrentStep(): ScenarioKey {
-    return lastElemOfArr(this.state.steps) as ScenarioKey;
+    return lastElemOfArr(this.state.steps);
   }
 
   private getInitialScenarioResult(currentStep: ScenarioKey): ScenarioReturnType {
@@ -90,7 +90,7 @@ export class GameModel {
     if (isBackCommand) {
       const prevStepIndex: number = this.state.steps.length - 2;
       if (this.state.steps.length > 1) {
-        const prevStep: ScenarioKey = this.state.steps[prevStepIndex] as ScenarioKey;
+        const prevStep: ScenarioKey = this.state.steps[prevStepIndex];
         nextScenario = scenarios[prevStep];
         this.state.steps.pop();
       } else {

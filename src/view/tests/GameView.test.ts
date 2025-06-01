@@ -1,4 +1,5 @@
 import { GameView } from '../GameView';
+import { pressEventKeys } from '../../constants/constants';
 
 describe('GameView', () => {
   let gameView: GameView;
@@ -31,8 +32,8 @@ describe('GameView', () => {
       const choices = ['Option 1', 'Option 2', 'Option 3'];
 
       setTimeout(() => {
-        process.stdin.emit('keypress', '', { name: 'down' });
-        process.stdin.emit('keypress', '', { name: 'return' });
+        process.stdin.emit('keypress', '', { name: pressEventKeys.DOWN });
+        process.stdin.emit('keypress', '', { name: pressEventKeys.RETURN });
       }, 100);
 
       const result = await gameView.checkUserInput(question, choices);
@@ -46,7 +47,7 @@ describe('GameView', () => {
       gameView['currentResolve'] = jest.fn();
       gameView['choiceIndex'] = 1;
 
-      gameView['handleKeyPress']('', { name: 'up' });
+      gameView['handleKeyPress']('', { name: pressEventKeys.UP });
       expect(gameView['choiceIndex']).toBe(0);
     });
 
@@ -55,7 +56,7 @@ describe('GameView', () => {
       gameView['currentResolve'] = jest.fn();
       gameView['choiceIndex'] = 1;
 
-      gameView['handleKeyPress']('', { name: 'down' });
+      gameView['handleKeyPress']('', { name: pressEventKeys.DOWN });
       expect(gameView['choiceIndex']).toBe(2);
     });
 
@@ -66,7 +67,7 @@ describe('GameView', () => {
       const promise = gameView.checkUserInput(question, choices);
 
       setTimeout(() => {
-        gameView['handleKeyPress']('', { name: 'return' });
+        gameView['handleKeyPress']('', { name: pressEventKeys.RETURN });
       }, 0);
 
       await expect(promise).resolves.toBe('Option 1');

@@ -18,12 +18,10 @@ type ActionType = {
 type ScenariosType = Record<ScenarioKey, ScenarioType>;
 type ScenarioReturnType = { choices: string[]; description: string; question: string };
 
-type MappedScenariosType = Record<string, ScenarioKey>;
-
 type StateType = {
-  steps: string[];
+  steps: ScenarioKey[];
   actions: string[];
   isGameOver: boolean;
 };
 
-export { ScenarioType, ScenarioReturnType, ActionType, ScenariosType, MappedScenariosType, StateType };
+export { ScenarioType, ScenarioReturnType, ActionType, ScenariosType, StateType };

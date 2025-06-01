@@ -1,18 +1,18 @@
 export enum ScenarioKey {
-  WELCOME = 'welcome',
-  BEGIN = 'begin',
-  RIGHT = 'right',
-  LEFT = 'left',
-  KNOCK_THE_DOOR = 'knockTheDoor',
-  TALK_WITH_WOMAN = 'talkWithWoman',
+  WELCOME = 'Welcome',
+  BEGIN = 'Begin',
+  RIGHT = 'Right',
+  LEFT = 'Left',
+  KNOCK_THE_DOOR = 'KnockTheDoor',
+  TALK_WITH_WOMAN = 'TalkWithWoman',
 }
 
 export enum SpecialCommand {
-  BACK = 'back',
-  BACK_FROM_ACTION = 'backFromAction',
+  BACK = 'Back',
+  BACK_FROM_ACTION = 'BackFromAction',
 }
 
 export enum EndGameCommand {
-  TRY_AGAIN = 'tryAgain',
-  EXIT = 'exit',
+  TRY_AGAIN = 'TryAgain',
+  EXIT = 'Exit',
 }

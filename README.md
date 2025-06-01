@@ -16,7 +16,7 @@
 
 ## Структура сценариев
 
-Сценарии хранятся в файле src/utils/scenarios.ts и имеют следующую структуру:
+Сценарии хранятся в файле src/constants/scenarios.ts и имеют следующую структуру:
 
 ```typescript
 type ScenarioType = {
@@ -61,7 +61,7 @@ const myNewScenario: ScenarioType = {
 };
 ```
 
-Добавьте новый сценарий в src/utils/constants.ts
+Добавьте новый сценарий в src/constants/constants.ts
 
 ```typescript
 export const scenarios: ScenariosType = {
@@ -73,14 +73,15 @@ export const scenarios: ScenariosType = {
   [ScenarioKey.TALK_WITH_WOMAN]: talkWithWomanScenario,
 };
 
-// key - вариант из choices, lowerCased
-export const mappedScenarios: MappedScenariosType = {
-  'начать': ScenarioKey.BEGIN,
-  'направо': ScenarioKey.RIGHT,
-  'налево': ScenarioKey.LEFT,
-  'постучать в дверь': ScenarioKey.KNOCK_THE_DOOR,
-  'поговорить с женщиной': ScenarioKey.TALK_WITH_WOMAN,
-  'вариант 1': Scenario.VARIANT1,
+// value - вариант из choices, lowerCased
+const scenarioChoices: Record<ScenarioKey, string> = {
+  [ScenarioKey.WELCOME]: 'добро пожаловать',
+  [ScenarioKey.BEGIN]: 'начать',
+  [ScenarioKey.RIGHT]: 'направо',
+  [ScenarioKey.LEFT]: 'налево',
+  [ScenarioKey.KNOCK_THE_DOOR]: 'постучать в дверь',
+  [ScenarioKey.TALK_WITH_WOMAN]: 'поговорить с женщиной',
+  [Scenario.VARIANT1]: 'вариант1',
 };
 ```
 

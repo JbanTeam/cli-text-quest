@@ -1,5 +1,6 @@
 import { GameModel } from '../GameModel';
 import { ScenarioType } from '../../types/types';
+import { ScenarioKey } from '../../types/enums';
 
 describe('GameModel', () => {
   let gameModel: GameModel;
@@ -12,7 +13,7 @@ describe('GameModel', () => {
     it('should return the initial state', () => {
       const state = gameModel.getState();
       expect(state).toEqual({
-        steps: ['welcome'],
+        steps: [ScenarioKey.WELCOME],
         actions: [],
         isGameOver: false,
       });
@@ -22,7 +23,7 @@ describe('GameModel', () => {
   describe('resetState', () => {
     it('should reset the state to initial', () => {
       gameModel['state'] = {
-        steps: ['begin'],
+        steps: [ScenarioKey.BEGIN],
         actions: ['action1'],
         isGameOver: true,
       };
@@ -31,7 +32,7 @@ describe('GameModel', () => {
 
       const state = gameModel.getState();
       expect(state).toEqual({
-        steps: ['welcome'],
+        steps: [ScenarioKey.WELCOME],
         actions: [],
         isGameOver: false,
       });
@@ -57,7 +58,7 @@ describe('GameModel', () => {
       expect(result.question).toBe('Куда направитесь?');
 
       const state = gameModel.getState();
-      expect(state.steps).toEqual(['welcome', 'begin']);
+      expect(state.steps).toEqual([ScenarioKey.WELCOME, ScenarioKey.BEGIN]);
     });
 
     it('should handle "back" command correctly', () => {
@@ -72,7 +73,7 @@ describe('GameModel', () => {
       expect(result.question).toBe('Выберите "Начать" чтобы погрузиться в приключение.');
 
       const state = gameModel.getState();
-      expect(state.steps).toEqual(['welcome']);
+      expect(state.steps).toEqual([ScenarioKey.WELCOME]);
     });
   });
 
@@ -103,7 +104,7 @@ describe('GameModel', () => {
 
       const state = gameModel.getState();
 
-      expect(state.steps).toEqual(['welcome']);
+      expect(state.steps).toEqual([ScenarioKey.WELCOME]);
       expect(state.actions).toEqual([input.toLowerCase()]);
       expect(state.isGameOver).toBe(false);
     });

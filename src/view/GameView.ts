@@ -1,5 +1,7 @@
 import * as readline from 'readline';
 
+import { pressEventKeys } from '../constants/constants';
+
 export class GameView {
   private isFirstRender = true;
   private choiceIndex = 0;
@@ -24,10 +26,12 @@ export class GameView {
 
   private initReadline() {
     readline.emitKeypressEvents(process.stdin);
+
     if (process.stdin.isTTY) {
       process.stdin.setRawMode(true);
       process.stdin.resume();
     }
+
     process.stdin.on('keypress', this.handleKeyPress);
   }
 
@@ -62,17 +66,17 @@ export class GameView {
       return;
     }
 
-    if (key.name === 'up') {
+    if (key.name === pressEventKeys.UP) {
       this.choiceIndex = (this.choiceIndex - 1 + this.currentChoices.length) % this.currentChoices.length;
       this.renderChoices();
-    } else if (key.name === 'down') {
+    } else if (key.name === pressEventKeys.DOWN) {
       this.choiceIndex = (this.choiceIndex + 1) % this.currentChoices.length;
       this.renderChoices();
-    } else if (key.name === 'return') {
+    } else if (key.name === pressEventKeys.RETURN) {
       const selectedChoice = this.currentChoices[this.choiceIndex];
       this.currentResolve(selectedChoice);
       this.resetState();
-    } else if (key.name === 'c' && key.ctrl) {
+    } else if (key.name === pressEventKeys.C && key.ctrl) {
       this.closeProcess();
     }
   };

@@ -1,6 +1,7 @@
 import { GameController } from '../GameController';
 import { GameModel } from '../../model/GameModel';
 import { GameView } from '../../view/GameView';
+import { ScenarioKey } from '../../types/enums';
 
 describe('GameController', () => {
   let gameController: GameController;
@@ -31,13 +32,13 @@ describe('GameController', () => {
       const spyDisplayMsg = jest.spyOn(mockView, 'displayMessage');
       const spyCheckUserInput = jest.spyOn(mockView, 'checkUserInput');
       mockModel.getState.mockReturnValue({
-        steps: ['welcome'],
+        steps: [ScenarioKey.WELCOME],
         actions: [],
         isGameOver: false,
       });
 
       mockModel.processScenario.mockReturnValue({
-        choices: ['begin'],
+        choices: [ScenarioKey.BEGIN],
         description: 'Welcome!',
         question: 'How are you?',
       });
@@ -48,7 +49,7 @@ describe('GameController', () => {
 
       expect(spyDisplayMsg).toHaveBeenCalledWith('Welcome!');
 
-      expect(spyCheckUserInput).toHaveBeenCalledWith('How are you?', ['begin']);
+      expect(spyCheckUserInput).toHaveBeenCalledWith('How are you?', [ScenarioKey.BEGIN]);
     });
   });
 
@@ -58,7 +59,7 @@ describe('GameController', () => {
       const spyCheckUserInput = jest.spyOn(mockView, 'checkUserInput');
 
       mockModel.getState.mockReturnValue({
-        steps: ['welcome'],
+        steps: [ScenarioKey.WELCOME],
         actions: [],
         isGameOver: false,
       });
@@ -101,12 +102,12 @@ describe('GameController', () => {
 
       mockModel.getState
         .mockReturnValueOnce({
-          steps: ['welcome'],
+          steps: [ScenarioKey.WELCOME],
           actions: [],
           isGameOver: true,
         })
         .mockReturnValue({
-          steps: ['welcome'],
+          steps: [ScenarioKey.WELCOME],
           actions: [],
           isGameOver: false,
         });
@@ -132,7 +133,7 @@ describe('GameController', () => {
     it('should handle exit command and close the process', async () => {
       const spyCloseProcess = jest.spyOn(mockView, 'closeProcess');
       mockModel.getState.mockReturnValue({
-        steps: ['welcome'],
+        steps: [ScenarioKey.WELCOME],
         actions: [],
         isGameOver: false,
       });
